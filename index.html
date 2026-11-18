@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NÚCLEO — A Jornada do Dado: jogo educativo sobre Arquitetura Computacional">
+  <title>NÚCLEO — A Jornada do Dado</title>
+  <!-- Google Fonts (único recurso externo permitido) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============================================================ -->
+  <!-- MENU SUPERIOR (oculto na tela inicial)                       -->
+  <!-- ============================================================ -->
+  <nav id="menu-topo" class="menu-topo oculto" role="navigation" aria-label="Menu principal">
+    <button class="menu-btn" data-ir="tela-mapa" aria-label="Ir para a Jornada">Jornada</button>
+    <button class="menu-btn" data-ir="tela-cruzadinha" aria-label="Ir para a Cruzadinha">Cruzadinha</button>
+    <button class="menu-btn" data-ir="tela-como-jogar" aria-label="Como jogar">Como jogar</button>
+    <button id="btn-som" class="menu-btn-icone" aria-label="Alternar som" title="Som">🔇</button>
+    <button id="btn-config" class="menu-btn-icone" aria-label="Configurações" title="Configurações">⚙</button>
+  </nav>
+
+  <!-- ============================================================ -->
+  <!-- PAINEL DE CONFIGURAÇÕES                                      -->
+  <!-- ============================================================ -->
+  <div id="painel-config" class="painel-config oculto" role="dialog" aria-label="Configurações" aria-modal="true">
+    <div class="config-conteudo painel-vidro">
+      <h2>Configurações</h2>
+      <label class="config-opcao">
+        <input type="checkbox" id="chk-reduzir-mov"> Reduzir animações
+      </label>
+      <label class="config-opcao">
+        <input type="checkbox" id="chk-som"> Ativar som
+      </label>
+      <button id="btn-fechar-config" class="btn-secundario">Fechar</button>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TELA: INÍCIO                                                 -->
+  <!-- ============================================================ -->
+  <section data-tela="tela-inicio" class="tela ativa" aria-label="Tela inicial">
+    <div class="inicio-fundo">
+      <div id="placa-mae-bg" class="placa-mae-bg" aria-hidden="true">
+        <div class="placa-corpo">
+          <div class="trilha-h trilha-1"></div>
+          <div class="trilha-h trilha-2"></div>
+          <div class="trilha-v trilha-3"></div>
+          <div class="trilha-v trilha-4"></div>
+          <div class="chip-deco chip-d1"></div>
+          <div class="chip-deco chip-d2"></div>
+          <div class="chip-deco chip-d3"></div>
+        </div>
+      </div>
+    </div>
+    <div class="inicio-conteudo">
+      <h1 class="logo-nucleo">
+        <span class="logo-texto">NÚCLEO</span>
+        <span class="logo-sub">A Jornada do Dado</span>
+      </h1>
+      <div class="inicio-botoes">
+        <button id="btn-iniciar" class="btn-primario btn-grande">▶ INICIAR JORNADA</button>
+        <button id="btn-cruzadinha-direto" class="btn-secundario btn-grande">🧩 IR DIRETO PARA A CRUZADINHA</button>
+        <button id="btn-como-jogar-inicio" class="btn-terciario">? COMO JOGAR</button>
+        <a href="#" id="link-recomecar" class="link-discreto oculto">Recomeçar do zero</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- TELA: PRÓLOGO                                                -->
+  <!-- ============================================================ -->
+  <section data-tela="tela-prologo" class="tela" aria-label="Prólogo">
+    <div class="prologo-conteudo">
+      <p id="prologo-linha1" class="prologo-linha" aria-live="polite"></p>
+      <p id="prologo-linha2" class="prologo-linha" aria-live="polite"></p>
+      <p id="prologo-linha3" class="prologo-linha" aria-live="polite"></p>
+    </div>
+    <button id="btn-pular-prologo" class="btn-terciario prologo-pular">Pular ▶</button>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- TELA: MAPA DE FASES                                          -->
+  <!-- ============================================================ -->
+  <section data-tela="tela-mapa" class="tela" aria-label="Mapa de fases">
+    <h2 class="titulo-tela">JORNADA</h2>
+    <div class="mapa-progresso">
+      <span id="mapa-progresso-texto">0 / 16 termos</span>
+    </div>
+    <div id="mapa-container" class="mapa-container" role="list" aria-label="Fases da jornada">
+      <!-- Nós gerados por JS -->
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- TELA: CENA DA FASE (3D)                                      -->
+  <!-- ============================================================ -->
+  <section data-tela="tela-cena" class="tela" aria-label="Cena da fase">
+    <!-- HUD superior -->
+    <div class="cena-hud">
+      <span id="cena-fase-nome" class="cena-fase-nome">Fase 1</span>
+      <div class="cena-progresso">
+        <div id="cena-progresso-barra" class="cena-progresso-barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="cena-progresso-preench"></div>
+        </div>
+        <span id="cena-progresso-texto">0/3</span>
+      </div>
+      <div id="cena-estrelas" class="cena-estrelas" aria-label="Estrelas">⭐ 0</div>
+      <button id="btn-dica" class="btn-icone" aria-label="Dicas" title="Dicas">💡</button>
+      <button id="btn-pular-termo" class="btn-icone" aria-label="Pular" title="Pular">⏭</button>
+    </div>
+
+    <!-- Menu de dicas -->
+    <div id="menu-dicas" class="menu-dicas oculto painel-vidro" role="menu" aria-label="Menu de dicas">
+      <button class="dica-opcao" data-nivel="0">🔍 Explicar cena (grátis)</button>
+      <button class="dica-opcao" data-nivel="1">📂 Categoria e letras</button>
+      <button class="dica-opcao" data-nivel="2">🔤 Primeira letra (−1⭐)</button>
+      <button class="dica-fechar btn-terciario">Fechar</button>
+    </div>
+
+    <!-- Palco 3D -->
+    <div id="palco" class="palco" aria-hidden="true">
+      <div id="placa" class="placa">
+        <!-- SVG de trilhas e circuitos 3D na superfície da placa -->
+        <svg id="trilhas-svg" class="trilhas-svg" viewBox="0 0 720 520" preserveAspectRatio="none">
+          <!-- Trilhas de dados inseridas por JS -->
+        </svg>
+        <div id="pacote-dados" class="pacote-dados oculto"></div>
+        <div id="container-componentes" class="container-componentes">
+          <!-- Componentes 3D inseridos por JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Painel Terminal -->
+    <aside id="terminal" class="terminal painel-vidro" aria-label="Terminal de narração" role="log" aria-live="polite">
+      <div class="terminal-cabecalho">
+        <span class="terminal-titulo">TERMINAL</span>
+        <button id="btn-rever" class="btn-icone" aria-label="Rever animação" title="Rever animação">↻</button>
+      </div>
+      <div id="terminal-corpo" class="terminal-corpo">
+        <!-- Linhas de narração inseridas por JS -->
+      </div>
+    </aside>
+
+    <!-- Rodapé: pista e resposta -->
+    <div class="cena-rodape">
+      <div id="pista-card" class="pista-card painel-vidro">
+        <span id="pista-numero" class="pista-numero"></span>
+        <span id="pista-familia" class="pista-familia"></span>
+        <p id="pista-texto" class="pista-texto"></p>
+      </div>
+      <div class="resposta-area">
+        <div id="resposta-toggle-container" class="resposta-toggle">
+          <button id="btn-modo-digitar" class="modo-btn ativo">Digitar</button>
+          <button id="btn-modo-arrastar" class="modo-btn">Arrastar</button>
+        </div>
+        <div id="resposta-digitar" class="resposta-modo">
+          <input type="text" id="input-resposta" class="input-resposta" placeholder="Digite a resposta..." autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Campo de resposta">
+          <button id="btn-confirmar-resposta" class="btn-primario">Confirmar</button>
+        </div>
+        <div id="resposta-arrastar" class="resposta-modo oculto">
+          <div id="banco-palavras-cena" class="banco-palavras" role="list" aria-label="Banco de palavras">
+            <!-- Chips inseridos por JS -->
+          </div>
+          <p class="arrastar-instrucao">Arraste uma palavra até o componente ou clique nela e depois no alvo.</p>
+        </div>
+        <!-- Painel exibido quando o termo já foi concluído -->
+        <div id="resposta-concluido" class="resposta-modo resposta-concluido oculto">
+          <div class="badge-concluido">
+            <span class="icone-check">✓</span>
+            <div class="info-concluido">
+              <span class="titulo-concluido">Termo já Descoberto!</span>
+              <span id="concluido-estrelas" class="estrelas-concluido">⭐⭐⭐</span>
+            </div>
+          </div>
+          <div class="concluido-botoes">
+            <button id="btn-ver-cartao-concluido" class="btn-secundario">📜 Ver Detalhes</button>
+            <button id="btn-proximo-concluido" class="btn-primario">▶ Próximo Termo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- TELA: CARTÃO DE REVELAÇÃO                                    -->
+  <!-- ============================================================ -->
+  <section data-tela="tela-cartao" class="tela" aria-label="Cartão de revelação" role="dialog" aria-modal="true">
+    <div class="cartao-modal painel-vidro">
+      <div id="cartao-familia-faixa" class="cartao-familia-faixa"></div>
+      <h2 id="cartao-nome" class="cartao-nome"></h2>
+      <p id="cartao-definicao" class="cartao-definicao"></p>
+      <div class="cartao-vida-real">
+        <strong>Onde você vê:</strong>
+        <p id="cartao-vida-real-texto"></p>
+      </div>
+      <div id="cartao-estrelas" class="cartao-estrelas"></div>
+      <button id="btn-cartao-continuar" class="btn-primario">Continuar ▶</button>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- TELA: CRUZADINHA                                             -->
+  <!-- ============================================================ -->
+  <section data-tela="tela-cruzadinha" class="tela" aria-label="Cruzadinha">
+    <h2 class="titulo-tela">CRUZADINHA</h2>
+
+    <!-- Pista ativa (exibição mobile-friendly acima da grade) -->
+    <div id="pista-ativa-display" class="pista-ativa-display painel-vidro" aria-live="polite">
+      <span id="pista-ativa-num" class="pista-ativa-num"></span>
+      <span id="pista-ativa-texto" class="pista-ativa-texto">Clique em uma casa para começar</span>
+    </div>
+
+    <div class="cruzadinha-layout">
+      <!-- Grade da cruzadinha -->
+      <div class="grade-wrapper">
+        <div id="grade-container" class="grade-container" role="grid" aria-label="Grade da cruzadinha">
+          <!-- Células geradas por JS -->
+        </div>
+      </div>
+
+      <!-- Painel de pistas -->
+      <div class="pistas-painel painel-vidro">
+        <div class="pistas-secao">
+          <h3 class="pistas-titulo">Horizontais</h3>
+          <ol id="pistas-h" class="pistas-lista" aria-label="Pistas horizontais">
+            <!-- Itens gerados por JS -->
+          </ol>
+        </div>
+        <div class="pistas-secao">
+          <h3 class="pistas-titulo">Verticais</h3>
+          <ol id="pistas-v" class="pistas-lista" aria-label="Pistas verticais">
+            <!-- Itens gerados por JS -->
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de ações -->
+    <div class="cruzadinha-acoes">
+      <button id="btn-conferir" class="btn-primario">✔ Conferir</button>
+      <button id="btn-reiniciar" class="btn-secundario">↺ Reiniciar</button>
+      <div class="cruzadinha-toggle">
+        <button id="btn-cruz-digitar" class="modo-btn ativo">Digitar</button>
+        <button id="btn-cruz-arrastar" class="modo-btn">Arrastar</button>
+      </div>
+      <div id="contador-acertos" class="contador-acertos" aria-live="polite">0 de 16 palavras</div>
+    </div>
+
+    <!-- Banco de palavras para modo arrastar -->
+    <div id="banco-palavras-cruz" class="banco-palavras-cruz oculto" role="list" aria-label="Banco de palavras da cruzadinha">
+      <!-- Chips gerados por JS -->
+    </div>
+
+    <!-- Região para anúncios de acessibilidade -->
+    <div id="aria-resultado" class="visualmente-oculto" aria-live="assertive" role="status"></div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- MODAL: CONFIRMAÇÃO DE REINÍCIO                               -->
+  <!-- ============================================================ -->
+  <div id="modal-reiniciar" class="modal-overlay oculto" role="dialog" aria-modal="true" aria-label="Confirmar reinício">
+    <div class="modal-caixa painel-vidro">
+      <p>Limpar o tabuleiro?</p>
+      <p class="modal-sub">O progresso da jornada será mantido.</p>
+      <div class="modal-botoes">
+        <button id="btn-confirmar-reiniciar" class="btn-primario">Sim, limpar</button>
+        <button id="btn-cancelar-reiniciar" class="btn-secundario">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TELA: FINAL                                                  -->
+  <!-- ============================================================ -->
+  <section data-tela="tela-final" class="tela" aria-label="Tela final">
+    <div class="final-conteudo">
+      <h2 class="titulo-tela">JORNADA COMPLETA!</h2>
+      <div class="final-stats">
+        <div class="stat-item">
+          <span class="stat-valor" id="final-estrelas">0</span>
+          <span class="stat-label">Estrelas</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-valor" id="final-tempo">00:00</span>
+          <span class="stat-label">Tempo</span>
+        </div>
+      </div>
+      <h3 class="final-glossario-titulo">Glossário</h3>
+      <div id="final-glossario" class="final-glossario" role="list" aria-label="Glossário de termos">
+        <!-- Itens gerados por JS -->
+      </div>
+      <div class="final-botoes">
+        <button id="btn-jogar-de-novo" class="btn-secundario">Jogar de novo</button>
+        <button id="btn-ir-cruzadinha-final" class="btn-primario">Ir à cruzadinha</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- TELA: COMO JOGAR                                             -->
+  <!-- ============================================================ -->
+  <section data-tela="tela-como-jogar" class="tela" aria-label="Como jogar" role="dialog" aria-modal="true">
+    <div class="como-jogar-modal painel-vidro">
+      <h2>COMO JOGAR</h2>
+      <div class="como-jogar-passos">
+        <div class="passo">
+          <span class="passo-icone">🚀</span>
+          <h3>1. Jornada</h3>
+          <p>Acompanhe um pacote de dados viajando dentro do computador. Em cada parada, descubra um novo termo.</p>
+        </div>
+        <div class="passo">
+          <span class="passo-icone">🧩</span>
+          <h3>2. Cruzadinha</h3>
+          <p>Preencha o tabuleiro com os termos aprendidos. Use as pistas para lembrar cada palavra.</p>
+        </div>
+        <div class="passo">
+          <span class="passo-icone">🖱️</span>
+          <h3>3. Modos de entrada</h3>
+          <p>Alterne entre digitar a resposta ou arrastar os chips de palavra até o lugar certo.</p>
+        </div>
+        <div class="passo">
+          <span class="passo-icone">💡</span>
+          <h3>4. Dicas</h3>
+          <p>Use dicas se travar: categoria e letras grátis; a primeira letra custa uma estrela.</p>
+        </div>
+      </div>
+      <button id="btn-fechar-como-jogar" class="btn-primario">Entendi!</button>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- FUNDO GLOBAL (grade de piso, scanlines, vinheta)             -->
+  <!-- ============================================================ -->
+  <div id="fundo-efeitos" class="fundo-efeitos" aria-hidden="true">
+    <div class="fundo-grade"></div>
+    <div class="fundo-scanline"></div>
+    <div class="fundo-vinheta"></div>
+  </div>
+
+  <!-- Scripts (clássicos, sem type="module") -->
+  <script src="dados.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
