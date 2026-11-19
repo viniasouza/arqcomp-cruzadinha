@@ -1,5 +1,5 @@
 // ============================================================
-// dados.js — Dados do jogo NÚCLEO: A Jornada do Dado
+// dados.js — Dados do jogo Arq Game - A Jornada do Dado
 // Contém: termos, layout da cruzadinha, fases e constantes
 // ============================================================
 

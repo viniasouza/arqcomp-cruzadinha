@@ -1,5 +1,5 @@
 /* ============================================================
-   NÚCLEO — A Jornada do Dado
+   Arq Game - A Jornada do Dado
    style.css — Design System Sci-Fi Control Room
    ============================================================ */
 
@@ -1241,6 +1241,13 @@ button {
 
 .chip-palavra:active {
   cursor: grabbing;
+}
+
+.chip-palavra.selecionado {
+  box-shadow: 0 0 16px var(--cyan), inset 0 0 8px var(--cyan) !important;
+  border-color: var(--cyan) !important;
+  background: rgba(34, 228, 255, 0.2) !important;
+  transform: translateY(-2px) scale(1.06);
 }
 
 .chip-palavra.arrastando {
