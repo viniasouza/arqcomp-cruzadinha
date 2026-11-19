@@ -340,9 +340,9 @@ var TERMOS = [
     nome: 'Quad core',
     familia: 'chip',
     fase: 5,
-    pista: 'Processador com quarteto de unidades independentes de execução para elevado paralelismo.',
+    pista: 'Processador com quarteto de unidades independentes de execução.',
     dica1: 'Tipo de chip · 8 letras',
-    definicao: 'Quatro núcleos no mesmo chip. Mais paralelismo, mas o ganho depende de o programa conseguir dividir o trabalho.',
+    definicao: 'Quatro núcleos no mesmo chip. O ganho depende de o programa conseguir dividir o trabalho.',
     vidaReal: 'Desktops, servidores e celulares topo de linha.',
     cena: 'quad',
     narracao: [
